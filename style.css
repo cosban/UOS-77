@@ -7,11 +7,8 @@ body {
 	background-color: #000;
 }
 
-.hidden {
-	display: none;
-}
-.output {
-	margin: 0 0 0 5px;
+.no-select {
+	cursor: default;
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -khtml-user-select: none;    /* Konqueror */
@@ -27,14 +24,13 @@ body {
 }
 
 .input {
-	margin: 0 0 0 5px;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 }
 
 .terminal {
-	letter-spacing: 3px;
 	position: relative;
+	letter-spacing: 3px;
     height: 600px;
     width:800px;
     background-color: #02120A;
@@ -45,6 +41,10 @@ body {
     font-family: 'FixedSys';
     padding: 10px;
     font-size: .88em;
+}
+
+.terminal > p, .terminal > div {
+	margin: 0 0 0 5px;
 }
 
 .shadow {

@@ -10,6 +10,7 @@ $(window).ready(function() {
 
 $(document).on('keypress', function(e) {
 	var key = e.which;
+	e.preventDefault();
 	switch(key){
 		case 13: // enter key
 		{
@@ -20,19 +21,13 @@ $(document).on('keypress', function(e) {
 			commands.unshift(input.substr(1));
 			com_pos = -1;
 			cur_pos = 1;
-			$('.output').append("<p>" + input + "</p><p>UNKOWN INPUT: " + input.substr(1) + " did you mean COCKS instead?<p>")
+			$('.output').append("<p>" + input + "</p>")
 			$(".input").html('&gt;<span id="cursor"></span>');
 			break;
 		}
 		default: 
 		{
-			e.preventDefault();
-			var input = $(".input").text();
-			var prefix = input.substring(0, cur_pos);
-			var suffix = input.substr(cur_pos);
-			prefix += String.fromCharCode(key);
-			cur_pos = cur_pos+1;
-			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			cur_pos = insertCharacter(String.fromCharCode(key), cur_pos);
 		}
 	}
 }).on('keydown', function(e){
@@ -41,13 +36,7 @@ $(document).on('keypress', function(e) {
 		case 8: // backspace
 		{
 			e.preventDefault();
-			if (cur_pos > 1) {
-				var input = $(".input").text();
-				var prefix = input.substring(0, cur_pos-1);
-				var suffix = input.substr(cur_pos);
-				cur_pos = cur_pos - 1;
-				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
-			}
+			cur_pos = removeCharacter(cur_pos, true);
 			break;
 		}
 		
@@ -55,32 +44,19 @@ $(document).on('keypress', function(e) {
 		{
 			e.preventDefault();
 			var input = $(".input").text();
-			cur_pos = input.length + 1;
-			var prefix = input.substring(0, cur_pos);
-			var suffix = input.substr(cur_pos);
-			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			cur_pos = setCursor(input.length);
 			break;
 		}
 		case 36: // home key
 		{
 			e.preventDefault();
-			var input = $(".input").text();
-			cur_pos = 1;
-			var prefix = input.substring(0, cur_pos);
-			var suffix = input.substr(cur_pos);
-			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			cur_pos = setCursor(1);
 			break;
 		}
 		case 37: // left arrow
 		{
 			e.preventDefault();
-			var input = $(".input").text();
-			if (cur_pos > 1) {
-				cur_pos = cur_pos -1;
-				var prefix = input.substring(0, cur_pos);
-				var suffix = input.substr(cur_pos);
-				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
-			}
+			cur_pos = setCursor(cur_pos - 1);
 			break;
 		}
 		case 38: // up arrow
@@ -88,34 +64,25 @@ $(document).on('keypress', function(e) {
 			e.preventDefault();
 			if (commands.length > 0) {
 				com_pos = (com_pos+1) % commands.length;
-				cur_pos = commands[com_pos].length+1;
-				$(".input").html('&gt;' + commands[com_pos]  + '<span id="cursor"></span>');
+				curpos = setInput(commands[com_pos]);
 			}
 			break;
 		}		
 		case 39: // right arrow
 		{
 			e.preventDefault();
-			var input = $(".input").text();
-			if (cur_pos <= input.length) {
-				cur_pos = cur_pos + 1;
-				var prefix = input.substring(0, cur_pos);
-				var suffix = input.substr(cur_pos);
-				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
-			}
+			cur_pos = setCursor(cur_pos + 1);
 			break;
 		}
 		case 40: // down arrow
 		{
 			e.preventDefault();
 			if (commands.length > 0) {
-				if (com_pos === 0) {
-					$(".input").html('&gt;<span id="cursor"></span>');
-					cur_pos = 1;
+				if (com_pos <= 0) {
+					curpos = setInput('');
 				} else {
 					com_pos = (com_pos+1) % commands.length;
-					cur_pos = commands[com_pos].length+1;
-					$(".input").html('&gt;' + commands[com_pos]  + '<span id="cursor"></span>');
+					curpos = setInput(commands[com_pos]);
 				}
 			}
 			break;
@@ -123,14 +90,69 @@ $(document).on('keypress', function(e) {
 		case 46: // delete key
 		{
 			e.preventDefault();
-			var input = $(".input").text();
-			if (cur_pos < input.length + 1) {
-				var prefix = input.substring(0, cur_pos);
-				var suffix = input.substr(cur_pos+1);
-				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
-			}
-			break;
+			cur_pos = removeCharacter(cur_pos, false);
 			break;
 		}
 	}
 });
+
+var setCursor = function(pos) {
+	var input = $(".input").text();
+	if (pos < 1) {
+		pos = 1;
+	}
+	if (pos > input.length) {
+		pos = input.length;
+	}
+	var prefix = input.substring(0, pos);
+	var suffix = input.substr(pos);
+	$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+	return pos;
+}
+
+var setInput = function(text) {
+	var input = $(".input").html('&gt;<span id="cursor"></span>');
+	var inputloop = function(text){
+		setTimeout(function () {
+			cur_pos = insertCharacter(text[0], cur_pos);
+			if (text.length > 1){
+				inputloop(text.substr(1));
+			} 
+			return cur_pos;
+		}, 5);
+		return cur_pos;
+	}
+	if (text.length > 0) {
+		return inputloop(text);
+	} else {
+		return 1;
+	}
+}
+
+var insertCharacter = function(c, pos) {
+	var input = $(".input").text();
+	var prefix = input.substring(0, pos);
+	var suffix = input.substr(pos);
+	prefix += c;
+	$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+	return pos + 1;
+}
+
+var removeCharacter = function(pos, before) {
+	var input = $(".input").text();
+	if (before) {
+		if (pos > 1) {
+			var prefix = input.substring(0, pos-1);
+			var suffix = input.substr(pos);
+			pos = pos - 1;
+			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+		}
+	} else {
+		if (pos < input.length + 1) {
+			var prefix = input.substring(0, pos);
+			var suffix = input.substr(pos+1);
+			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+		}
+	}
+	return pos;
+}
