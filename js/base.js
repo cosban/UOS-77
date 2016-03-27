@@ -36,24 +36,27 @@ $(window).ready(function() {
 				 appendAction(4);
 				 appendAction(clearOutput);
 	appendAction('WELCOME. PLEASE ENTER VALID CREDENTIALS.\n'+
-				 '           LOGIN: charlie\n'+
+				 ' \n'+
+	             ' \n'+
+				 ' \n'+
+				 ' \n', false);
+	appendAction('           LOGIN: charlie\n'+
 				 '        PASSWORD: ********************\n');
 	appendAction(4);
 	appendAction(clearOutput);
 	appendAction('###############################################################################\n'+
-				 '                .dP\'                         dP\"Yb.\n'+
-				 '              dP\'                            `b   \'Yb\n'+
-				 '\n'+
-				 '      .aaa.    \'Yb   `Y8888888b. `Y8888888b.    \'Yb   `Yb    dP\' .d888b.\n'+
-				 '     d\'   `b    88      .dP\'        .dP\'         88     Yb  dP   8\'   `Yb\n'+
-				 '     `b.  .8    88    ,dP         ,dP            88      YbdP    Yb.   88\n'+
-				 '        .dP`b  .8P    88     .    88     .      .8P      .8P         .dP\n'+
-				 '     .dP\'  dP         `Yb...dP    `Yb...dP             dP\'  b      .dP\'\n'+
-				 '        .dP\'            `\"\"\"\'       `\"\"\"\'              Y.  ,P    .dP\'\n'+
-				 '     .dP\'              Location: Baltimore              `\"\"\'\n'+
+				 '#               .dP\'                         dP\"Yb.                           #\n'+
+				 '#             dP\'                            `b   \'Yb                         #\n'+
+				 '#                                                                             #\n'+
+				 '#     .aaa.    \'Yb   `Y8888888b. `Y8888888b.    \'Yb   `Yb    dP\' .d888b.      #\n'+
+				 '#    d\'   `b    88      .dP\'        .dP\'         88     Yb  dP   8\'   `Yb     #\n'+
+				 '#    `b.  .8    88    ,dP         ,dP            88      YbdP    Yb.   88     #\n'+
+				 '#       .dP`b  .8P    88     .    88     .      .8P      .8P         .dP      #\n'+
+				 '#    .dP\'  dP         `Yb...dP    `Yb...dP             dP\'  b      .dP\'       #\n'+
+				 '#       .dP\'            `\"\"\"\'       `\"\"\"\'              Y.  ,P    .dP\'         #\n'+
+				 '#   .dP\'              Location: Baltimore              `\"\"\'                   #\n'+
 				 '###############################################################################\n'+
-				 '\n'+
-				 '\n'+
+				 ' \n'+
 				 'Last login: Sat Mar 26 21:51:02 2016\n');
 	appendAction(toggleInputEnabled);
 });
