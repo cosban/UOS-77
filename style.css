@@ -1,0 +1,51 @@
+@font-face {                           
+  font-family: Fixedsys;               
+  src: url(fixedsys.ttf)
+}                                      
+
+body {
+	background-color: #000;
+}
+
+.hidden {
+	display: none;
+}
+.output {
+	margin: 0px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                    not supported by any browser */
+}
+
+.output > p {
+	white-space: pre;
+	margin: 0px;
+}
+
+.terminal {
+	position: relative;
+    height: 600px;
+    width:800px;
+    background-color: #02120A;
+    margin-left:auto;
+    margin-right:auto;
+    line-height: 23px;
+    color: #00b400;
+    font-family: 'FixedSys';
+    padding: 10px;
+    font-size: 1.26em;
+}
+
+.shadow {
+    -moz-box-shadow: inset 0 0 20px #000000;
+    -webkit-box-shadow: inset 0 0 20px #000000;
+    box-shadow: inset 0 0 20px #000000;
+}
+
+#cursor {
+	border-left: 3px solid #00b400 !important;
+}
