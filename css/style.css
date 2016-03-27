@@ -18,8 +18,11 @@ body {
                                     not supported by any browser */
 }
 
-.output > p {
+.output {
 	white-space: pre-wrap;
+}
+
+.output > p {
 	margin: 0px;
 }
 
@@ -39,6 +42,7 @@ body {
     line-height: 23px;
     color: #00b400;
     font-family: 'FixedSys';
+	overflow: hidden;
     padding: 10px;
     font-size: .88em;
 }

@@ -3,6 +3,7 @@ var actionQueue = [];
 var com_pos = -1;
 var cur_pos = 1;
 var delay = 0;
+var scroll = 0;
 var outputLocked = false;
 var inputLocked = false;
 $(window).ready(function() {
@@ -79,6 +80,7 @@ $(document).on('keypress', function(e) {
 			cur_pos = 1;
 			appendAction(input);
 			$(".input").html('&gt;<span id="cursor"></span>');
+			scroll = setView(scroll + 23);
 			break;
 		}
 		default: 
@@ -98,7 +100,18 @@ $(document).on('keypress', function(e) {
 			cur_pos = removeCharacter(cur_pos, true);
 			break;
 		}
-		
+		case 33: // page up
+		{
+			e.preventDefault();
+			scroll = setView(scroll - 23);
+			break;
+		}
+		case 34: // page down
+		{
+			e.preventDefault();
+			scroll = setView(scroll + 23);
+			break;
+		}
 		case 35: // end key
 		{
 			e.preventDefault();
@@ -154,6 +167,20 @@ $(document).on('keypress', function(e) {
 		}
 	}
 });
+var setView = function(height) {
+	var max = Number($('.output').height()) + Number($('.input').height()) - 600;
+	if (max < 0) {
+		max = 0;
+	}
+	if (height < 0) {
+		height = 0;
+	} else if (height > max) {
+		height = max;
+	}
+	$(".terminal").scrollTop(height);
+	return height;
+}
+
 var checkFlag = function(flag) {
 	if(flag === false) {
 		console.log("flag was false");
