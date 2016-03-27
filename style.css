@@ -22,8 +22,13 @@ body {
 }
 
 .output > p {
-	white-space: pre;
+	white-space: pre-wrap;
 	margin: 0px;
+}
+
+.input {
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 .terminal {

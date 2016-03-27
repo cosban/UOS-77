@@ -1,8 +1,8 @@
 $(window).ready(function() {
-	setInterval(function() {$('#cursor').toggleClass("hidden")}, 1000);
+	setInterval(function() {$('#cursor').toggleClass("hidden")}, 600);
 });
 
-$(document).on('keydown', function(e) {
+$(document).on('keypress', function(e) {
 	var key = e.which;
 	switch(key){
 		case 8: // backspace
@@ -19,11 +19,9 @@ $(document).on('keydown', function(e) {
 			var input = $(".input").text();
 			$('.output').append("<p>" + input + "</p>")
 			$(".input").html('&gt;<span id="cursor"></span>');
+			break;
 		}
-		case 37: // left arrow
-		case 38: // up arrow
-		case 39: // right arrow
-		case 40: // down arrow
+		
 		case 46: // delete key
 		{
 			break;
@@ -31,10 +29,31 @@ $(document).on('keydown', function(e) {
 		default: 
 		{
 			var input = $(".input").text();
-			input += String.fromCharCode(e.keyCode);
+			input += String.fromCharCode(key);
 			$(".input").html(input + '<span id="cursor"></span>');
 		}
-		
 	}
-	
+});
+$(document).on('keydown', function(e){
+	var key = e.which;
+	switch(key){
+		case 37: // left arrow
+		{
+			break;
+		}
+		case 38: // up arrow
+		{
+			$(".input").html('&gt;previous<span id="cursor"></span>');
+			break;
+		}		
+		case 39: // right arrow
+		{
+			break;
+		}
+		case 40: // down arrow
+		{
+			$(".input").html('&gt;next<span id="cursor"></span>');
+			break;
+		}
+	}
 });
