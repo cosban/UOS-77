@@ -9,7 +9,6 @@ $(window).ready(function() {
 });
 
 $(document).on('keypress', function(e) {
-    e.preventDefault();
 	var key = e.which;
 	switch(key){
 		case 13: // enter key
@@ -25,16 +24,15 @@ $(document).on('keypress', function(e) {
 			$(".input").html('&gt;<span id="cursor"></span>');
 			break;
 		}
-		case 46: // delete key
-		{
-			break;
-		}
 		default: 
 		{
+			e.preventDefault();
 			var input = $(".input").text();
-			input += String.fromCharCode(key);
-			$(".input").html(input + '<span id="cursor"></span>');
+			var prefix = input.substring(0, cur_pos);
+			var suffix = input.substr(cur_pos);
+			prefix += String.fromCharCode(key);
 			cur_pos = cur_pos+1;
+			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
 		}
 	}
 }).on('keydown', function(e){
@@ -43,11 +41,35 @@ $(document).on('keypress', function(e) {
 		case 8: // backspace
 		{
 			e.preventDefault();
-			var input = $(".input").text();
-			if (input.length > 1) {
-				input = input.substr(0, input.length-1);
-				$(".input").html(input + '<span id="cursor"></span>');
+			if (cur_pos > 1) {
+				var input = $(".input").text();
+				var prefix = input.substring(0, cur_pos-1);
+				var suffix = input.substr(cur_pos);
+				cur_pos = cur_pos - 1;
+				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
 			}
+			break;
+		}
+		
+		case 35: // end key
+		{
+			e.preventDefault();
+			var input = $(".input").text();
+			cur_pos = input.length + 1;
+			var prefix = input.substring(0, cur_pos);
+			var suffix = input.substr(cur_pos);
+			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			break;
+		}
+		case 36: // home key
+		{
+			e.preventDefault();
+			var input = $(".input").text();
+			cur_pos = 1;
+			var prefix = input.substring(0, cur_pos);
+			var suffix = input.substr(cur_pos);
+			$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			break;
 		}
 		case 37: // left arrow
 		{
@@ -96,6 +118,18 @@ $(document).on('keypress', function(e) {
 					$(".input").html('&gt;' + commands[com_pos]  + '<span id="cursor"></span>');
 				}
 			}
+			break;
+		}
+		case 46: // delete key
+		{
+			e.preventDefault();
+			var input = $(".input").text();
+			if (cur_pos < input.length + 1) {
+				var prefix = input.substring(0, cur_pos);
+				var suffix = input.substr(cur_pos+1);
+				$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
+			}
+			break;
 			break;
 		}
 	}
