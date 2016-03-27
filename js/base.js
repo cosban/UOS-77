@@ -1,14 +1,67 @@
 var commands = [];
+var actionQueue = [];
 var com_pos = -1;
 var cur_pos = 1;
+var delay = 0;
+var outputLocked = false;
+var inputLocked = false;
 $(window).ready(function() {
 	setInterval(function() {
 		var opacity = Number($('#cursor').css('opacity'));
 		$('#cursor').css('opacity', (opacity + 1) % 2);
 	}, 600);
+	setInterval(function() {
+		if (delay > 0) {
+			delay--;
+		} else if (actionQueue.length > 0 && !outputLocked) {
+			var action = actionQueue.shift();
+			if (typeof action === "string") {
+				$('.output').append("<p>" + action + "</p>");
+			} else if (typeof action === "number") {
+				delay = action;
+			} else {
+				action();
+			}
+		}
+	}, 50);
+	appendAction(toggleInputEnabled);
+	appendAction(' \n'+
+				 ' \n'+
+	             ' \n'+
+				 ' \n'+
+				 ' \n'+
+				 'cosBIOS (version pre-0.4.2-20770204-235959-zellurs\n'+
+				 ' \n'+
+				 'PRESS Ctrl+L TO RECONFIGURE POST OPTIONS\n', false);
+				 appendAction(4);
+				 appendAction(clearOutput);
+	appendAction('WELCOME. PLEASE ENTER VALID CREDENTIALS.\n'+
+				 '           LOGIN: charlie\n'+
+				 '        PASSWORD: ********************\n');
+	appendAction(4);
+	appendAction(clearOutput);
+	appendAction('###############################################################################\n'+
+				 '                .dP\'                         dP\"Yb.\n'+
+				 '              dP\'                            `b   \'Yb\n'+
+				 '\n'+
+				 '      .aaa.    \'Yb   `Y8888888b. `Y8888888b.    \'Yb   `Yb    dP\' .d888b.\n'+
+				 '     d\'   `b    88      .dP\'        .dP\'         88     Yb  dP   8\'   `Yb\n'+
+				 '     `b.  .8    88    ,dP         ,dP            88      YbdP    Yb.   88\n'+
+				 '        .dP`b  .8P    88     .    88     .      .8P      .8P         .dP\n'+
+				 '     .dP\'  dP         `Yb...dP    `Yb...dP             dP\'  b      .dP\'\n'+
+				 '        .dP\'            `\"\"\"\'       `\"\"\"\'              Y.  ,P    .dP\'\n'+
+				 '     .dP\'              Location: Baltimore              `\"\"\'\n'+
+				 '###############################################################################\n'+
+				 '\n'+
+				 '\n'+
+				 'Last login: Sat Mar 26 21:51:02 2016\n');
+	appendAction(toggleInputEnabled);
 });
 
 $(document).on('keypress', function(e) {
+	if(inputLocked) {
+		return;
+	}
 	var key = e.which;
 	e.preventDefault();
 	switch(key){
@@ -21,7 +74,7 @@ $(document).on('keypress', function(e) {
 			commands.unshift(input.substr(1));
 			com_pos = -1;
 			cur_pos = 1;
-			$('.output').append("<p>" + input + "</p>")
+			appendAction(input);
 			$(".input").html('&gt;<span id="cursor"></span>');
 			break;
 		}
@@ -31,6 +84,9 @@ $(document).on('keypress', function(e) {
 		}
 	}
 }).on('keydown', function(e){
+	if(inputLocked) {
+		return;
+	}
 	var key = e.which;
 	switch(key){
 		case 8: // backspace
@@ -95,6 +151,15 @@ $(document).on('keypress', function(e) {
 		}
 	}
 });
+var checkFlag = function(flag) {
+	if(flag === false) {
+		console.log("flag was false");
+		setTimeout(checkFlag(flag), 1000);
+    } else {
+		console.log("flag was true");
+		return false;
+	}
+}
 
 var setCursor = function(pos) {
 	var input = $(".input").text();
@@ -109,24 +174,51 @@ var setCursor = function(pos) {
 	$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
 	return pos;
 }
-
+var toggleInputEnabled = function(){
+	if(inputLocked) {
+		inputLocked = false;
+		var input = $(".input").html('&gt;<span id="cursor"></span>');
+	} else {
+		inputLocked = true;
+		var input = $(".input").html('');
+	}
+}
 var setInput = function(text) {
 	var input = $(".input").html('&gt;<span id="cursor"></span>');
-	var inputloop = function(text){
+	var textloop = function(text){
 		setTimeout(function () {
 			cur_pos = insertCharacter(text[0], cur_pos);
 			if (text.length > 1){
-				inputloop(text.substr(1));
+				textloop(text.substr(1));
 			} 
 			return cur_pos;
 		}, 5);
 		return cur_pos;
 	}
 	if (text.length > 0) {
-		return inputloop(text);
+		return textloop(text);
 	} else {
 		return 1;
 	}
+}
+
+var appendAction = function(text, split = true) {
+	if(typeof text === "string" && split) {
+		var lines = text.split(/\r\n|\r|\n/g);
+		for (var i = 0; i < lines.length; i++){
+			actionQueue.push(lines[i]);
+		}
+	} else {
+		actionQueue.push(text);
+	}
+}
+
+var clearOutput = function() {
+	$('.output').empty();
+	outputLocked = true;
+	setTimeout(function(){
+		outputLocked = false;
+	}, 50);
 }
 
 var insertCharacter = function(c, pos) {
