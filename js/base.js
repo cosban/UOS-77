@@ -6,7 +6,7 @@ var delay = 0;
 var scroll = 0;
 var outputLocked = false;
 var inputLocked = false;
-$(window).on("tap", function(){
+$(window).on("click", function(){
 	prompt();
 }).ready(function() {
 	$('body').append('<audio id="loginAudio" preload="auto"><source src="./audio/keyboard-multiple.mp3" /></audio>');
