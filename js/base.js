@@ -239,7 +239,10 @@ var setInput = function(text) {
 	}
 }
 
-var appendAction = function(text, split = true) {
+var appendAction = function(text, split) {
+	if (typeof split === 'undefined') {
+		split = true;
+	}
 	if(typeof text === "string" && split) {
 		var lines = text.split(/\r\n|\r|\n/g);
 		for (var i = 0; i < lines.length; i++){
