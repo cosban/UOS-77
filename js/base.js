@@ -7,6 +7,7 @@ var scroll = 0;
 var outputLocked = false;
 var inputLocked = false;
 $(window).ready(function() {
+	$('body').append('<audio id="loginAudio" preload="auto"><source src="./audio/keyboard-multiple.mp3" /></audio>');
 	setInterval(function() {
 		var opacity = Number($('#cursor').css('opacity'));
 		$('#cursor').css('opacity', (opacity + 1) % 2);
@@ -43,7 +44,8 @@ $(window).ready(function() {
 				 ' \n', false);
 	appendAction('           LOGIN: charlie\n'+
 				 '        PASSWORD: ********************\n');
-	appendAction(4);
+	appendAction(function(){document.getElementById('loginAudio').play()});
+	appendAction(20);
 	appendAction(clearOutput);
 	appendAction('###############################################################################\n'+
 				 '#               .dP\'                         dP\"Yb.                           #\n'+
@@ -78,7 +80,12 @@ $(document).on('keypress', function(e) {
 			commands.unshift(input.substr(1));
 			com_pos = -1;
 			cur_pos = 1;
-			appendAction(input);
+			// don't interrupt stuff that is already happening.
+			if(actionQueue.length > 0) {
+				appendAction(input);
+			} else {
+				$('.output').append("<p>" + input + "</p>");
+			}
 			$(".input").html('&gt;<span id="cursor"></span>');
 			scroll = setView(scroll + 23);
 			break;
