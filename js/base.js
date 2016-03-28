@@ -18,7 +18,12 @@ $(window).ready(function() {
 		} else if (actionQueue.length > 0 && !outputLocked) {
 			var action = actionQueue.shift();
 			if (typeof action === "string") {
-				$('.output').append("<p>" + action + "</p>");
+				if(action === ">clear") {
+					clearOutput();
+				} else {
+					$('.output').append("<p>" + action + "</p>");
+					scroll = setView(scroll + 23);
+				}
 			} else if (typeof action === "number") {
 				delay = action;
 			} else {
@@ -37,6 +42,16 @@ $(window).ready(function() {
 				 'PRESS Ctrl+L TO RECONFIGURE POST OPTIONS\n', false);
 				 appendAction(4);
 				 appendAction(clearOutput);
+    appendAction('Detecting Hardware...\n');
+	appendAction(12);
+	appendAction('2 Hard Disk(s) found\n'+
+				 '1 Tape Drive(s) found\n'+
+				 ' \n'+
+				 'Attempting to Enable Network...\n')			 
+	appendAction(20);
+	appendAction('Network Connection Error: E20338-1\n');
+	appendAction(4);
+	appendAction(clearOutput);
 	appendAction('WELCOME. PLEASE ENTER VALID CREDENTIALS.\n'+
 				 ' \n'+
 	             ' \n'+
@@ -47,6 +62,8 @@ $(window).ready(function() {
 	appendAction(function(){document.getElementById('loginAudio').play()});
 	appendAction(20);
 	appendAction(clearOutput);
+	var now = new Date();
+	var last = new Date(2016, 2, 25, 20, 53, 42, 531);
 	appendAction('###############################################################################\n'+
 				 '#               .dP\'                         dP\"Yb.                           #\n'+
 				 '#             dP\'                            `b   \'Yb                         #\n'+
@@ -60,7 +77,8 @@ $(window).ready(function() {
 				 '#   .dP\'              Location: Baltimore              `\"\"\'                   #\n'+
 				 '###############################################################################\n'+
 				 ' \n'+
-				 'Last login: Sat Mar 26 21:51:02 2016\n');
+				 'Current time: ' + now.toISOString()  + '\n'+
+				 'Last login:   ' + last.toISOString() + '\n');
 	appendAction(toggleInputEnabled);
 });
 
@@ -84,10 +102,14 @@ $(document).on('keypress', function(e) {
 			if(actionQueue.length > 0) {
 				appendAction(input);
 			} else {
-				$('.output').append("<p>" + input + "</p>");
+				if(input === ">clear") {
+					clearOutput();
+				} else {
+					$('.output').append("<p>" + input + "</p>");
+					scroll = setView(scroll + 23);
+				}
 			}
 			$(".input").html('&gt;<span id="cursor"></span>');
-			scroll = setView(scroll + 23);
 			break;
 		}
 		default: 
