@@ -6,7 +6,9 @@ var delay = 0;
 var scroll = 0;
 var outputLocked = false;
 var inputLocked = false;
-$(window).ready(function() {
+$(window).on("tap", function(){
+	prompt();
+}).ready(function() {
 	$('body').append('<audio id="loginAudio" preload="auto"><source src="./audio/keyboard-multiple.mp3" /></audio>');
 	setInterval(function() {
 		var opacity = Number($('#cursor').css('opacity'));
