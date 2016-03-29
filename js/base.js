@@ -57,9 +57,15 @@ $(window).ready(function() {
 	             ' \n'+
 				 ' \n'+
 				 ' \n', false);
-	appendAction('           LOGIN: charlie\n'+
-				 '        PASSWORD: ********************\n');
+	appendAction('           LOGIN: ');
 	appendAction(function(){document.getElementById('loginAudio').play()});
+	appendAction( function(){
+		autoType('charlie\n');
+		} );
+	appendAction('        PASSWORD: ');
+	appendAction( function() {
+		autoType('********************\n');
+		} );
 	appendAction(20);
 	appendAction(clearOutput);
 	var now = new Date();
@@ -233,6 +239,7 @@ var setCursor = function(pos) {
 	$(".input").html(prefix + '<span id="cursor"></span>' + suffix);
 	return pos;
 }
+
 var toggleInputEnabled = function(){
 	if(inputLocked) {
 		inputLocked = false;
@@ -242,6 +249,22 @@ var toggleInputEnabled = function(){
 		var input = $(".input").html('');
 	}
 }
+var autoType = function(text) {
+	var output = $($('.output>p')[$('.output>p').length -1]);
+	outputLocked = true;
+	var textloop = function(text) {
+		setTimeout(function () {
+			output.append(text[0])
+			if (text.length > 1){
+				textloop(text.substr(1));
+			} else {
+				outputLocked = false;
+			}
+		}, 30);
+	}
+	textloop(text);
+}
+
 var setInput = function(text) {
 	var input = $(".input").html('&gt;<span id="cursor"></span>');
 	var textloop = function(text){
